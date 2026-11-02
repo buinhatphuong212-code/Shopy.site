@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KeyShop — Mua Key Chất Lượng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:        #0D0F14;
+  --bg2:       #12151C;
+  --card:      #1A1D26;
+  --card2:     #222635;
+  --border:    rgba(255,255,255,0.07);
+  --accent:    #00E5FF;
+  --accent2:   #0099FF;
+  --green:     #00C853;
+  --red:       #FF3D57;
+  --yellow:    #FFB300;
+  --text:      #E8EAF0;
+  --text2:     #8890A4;
+  --text3:     #4A5068;
+  --font:      'Inter', sans-serif;
+  --mono:      'JetBrains Mono', monospace;
+  --r:         10px;
+  --r2:        6px;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0D0F14; }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+}
+button { cursor: pointer; font-family: var(--font); }
+input, select { font-family: var(--font); }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; }
+
+/* ── SCROLLBAR ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--card2); border-radius: 2px; }
+
+/* ════════════════════════════════════════════════════════════
+   AUTH SCREEN
+════════════════════════════════════════════════════════════ */
+#auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+#auth-screen::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  pointer-events: none;
+}
+#auth-screen::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,153,255,0.05) 0%, transparent 70%);
+  bottom: -150px; left: -100px;
+  pointer-events: none;
+}
+
+.auth-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  width: 100%;
+  max-width: 400px;
+  margin: 20px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.auth-box::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+}
+
+.auth-logo {
+  padding: 28px 28px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.auth-logo .icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.auth-logo .brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.auth-logo .brand span { color: var(--accent); }
+
+.auth-tabs {
+  display: flex;
+  margin: 24px 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.auth-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.auth-form { padding: 24px 28px 28px; }
+.auth-panel { display: none; }
+.auth-panel.active { display: block; }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.form-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text3); }
+
+.btn-primary {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border: none;
+  border-radius: var(--r2);
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.auth-footer {
+  padding: 0 28px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+}
+
+/* ════════════════════════════════════════════════════════════
+   MAIN APP
+════════════════════════════════════════════════════════════ */
+#app-screen { display: none; min-height: 100vh; flex-direction: column; }
+#app-screen.visible { display: flex; }
+
+/* ── TOP BAR ─────────────────────────────────────────────── */
+.topbar {
+  height: 54px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 16px; letter-spacing: -0.3px;
+  flex: 1;
+}
+.topbar-logo .dot { color: var(--accent); }
+.topbar-balance {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  font-family: var(--mono);
+}
+.topbar-avatar {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #000;
+  cursor: pointer;
+}
+
+/* ── BOTTOM NAV ──────────────────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.nav-item {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  background: none; border: none; color: var(--text3);
+  font-size: 10px; font-weight: 500;
+  transition: color 0.2s;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+.nav-item svg { width: 20px; height: 20px; }
+.nav-item.active { color: var(--accent); }
+.nav-item.active svg path, .nav-item.active svg rect,
+.nav-item.active svg circle, .nav-item.active svg polyline {
+  stroke: var(--accent);
+}
+
+/* ── PAGE CONTAINER ──────────────────────────────────────── */
+.pages {
+  flex: 1;
+  padding: 16px 16px 76px;
+  overflow-y: auto;
+}
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── SECTION TITLE ───────────────────────────────────────── */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+.section-title span { color: var(--accent); }
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-sm {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+/* ── HOME PAGE ───────────────────────────────────────────── */
+.hero-banner {
+  background: linear-gradient(135deg, #0A1628 0%, #0D1F3C 50%, #091420 100%);
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::after {
+  content: '🔑';
+  position: absolute;
+  right: 16px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  opacity: 0.3;
+}
+.hero-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.hero-sub { font-size: 13px; color: var(--text2); }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+}
+.stat-val {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 11px; color: var(--text2); }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.product-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.product-img {
+  width: 100%; height: 80px;
+  background: linear-gradient(135deg, #1A2744, #0D2136);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+.product-body { padding: 10px; }
+.product-name {
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 4px;
+}
+.product-price {
+  font-size: 15px; font-weight: 700;
+  color: var(--accent);
+  font-family: var(--mono);
+}
+.product-price .unit { font-size: 11px; color: var(--text2); font-family: var(--font); }
+.badge {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+.badge-hot { background: rgba(255,61,87,0.15); color: var(--red); }
+.badge-new { background: rgba(0,200,83,0.15); color: var(--green); }
+.badge-sale { background: rgba(255,179,0,0.15); color: var(--yellow); }
+
+/* ── BUY PAGE ────────────────────────────────────────────── */
+.price-list { display: flex; flex-direction: column; gap: 8px; }
+.price-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.price-item.selected { border-color: var(--accent); background: rgba(0,229,255,0.04); }
+.price-item-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.price-item-info { flex: 1; }
+.price-item-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.price-item-desc { font-size: 12px; color: var(--text2); }
+.price-item-price {
+  font-size: 16px; font-weight: 700;
+  color: var(--accent);
+  font-family: var(--mono);
+}
+.price-item-radio {
+  width: 18px; height: 18px;
+  border: 2px solid var(--text3);
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s;
+}
+.price-item.selected .price-item-radio { border-color: var(--accent); }
+.price-item.selected .price-item-radio::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.btn-buy {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border: none; border-radius: var(--r);
+  color: #000; font-size: 15px; font-weight: 700;
+  margin-top: 16px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-buy:hover { opacity: 0.9; transform: translateY(-1px); }
+.balance-info {
+  display: flex; justify-content: space-between;
+  align-items: center;
+  background: rgba(0,200,83,0.07);
+  border: 1px solid rgba(0,200,83,0.15);
+  border-radius: var(--r2);
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.balance-info .label { color: var(--text2); }
+.balance-info .val { font-weight: 700; color: var(--green); font-family: var(--mono); }
+
+/* ── HISTORY PAGE ─────────────────────────────────────────── */
+.history-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+  margin-bottom: 8px;
+}
+.history-icon {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.history-icon.buy { background: rgba(0,229,255,0.1); }
+.history-icon.topup { background: rgba(0,200,83,0.1); }
+.history-info { flex: 1; }
+.history-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.history-date { font-size: 11px; color: var(--text3); }
+.history-key {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--accent);
+  background: rgba(0,229,255,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+.history-amount {
+  font-size: 14px; font-weight: 700;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.history-amount.minus { color: var(--red); }
+.history-amount.plus  { color: var(--green); }
+
+.filter-row {
+  display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text2);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+/* ── DOWNLOAD PAGE ───────────────────────────────────────── */
+.platform-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.platform-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.platform-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.platform-card .picon { font-size: 36px; margin-bottom: 8px; }
+.platform-card .pname { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.platform-card .pver { font-size: 11px; color: var(--text2); }
+.btn-dl {
+  width: 100%; padding: 11px;
+  margin-top: 10px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text);
+  font-size: 13px; font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-dl:hover { border-color: var(--accent); color: var(--accent); }
+
+.proxy-section { margin-top: 20px; }
+.proxy-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  margin-bottom: 8px;
+}
+.proxy-flag { font-size: 20px; margin-right: 8px; }
+.proxy-host {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+  flex: 1;
+}
+.proxy-ping {
+  font-size: 11px;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.proxy-ping.fast { background: rgba(0,200,83,0.12); color: var(--green); }
+.proxy-ping.mid  { background: rgba(255,179,0,0.12); color: var(--yellow); }
+
+/* ── MENU PAGE ───────────────────────────────────────────── */
+.user-header {
+  display: flex; gap: 14px; align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.user-avatar {
+  width: 54px; height: 54px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700; color: #000;
+  flex-shrink: 0;
+}
+.user-name { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+.user-role {
+  font-size: 11px; color: var(--accent);
+  background: rgba(0,229,255,0.08);
+  padding: 2px 8px; border-radius: 4px;
+  display: inline-block; font-weight: 600;
+}
+
+.balance-card {
+  background: linear-gradient(135deg, #091A30, #0D2540);
+  border: 1px solid rgba(0,229,255,0.12);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.balance-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.balance-amount {
+  font-size: 32px; font-weight: 700;
+  font-family: var(--mono);
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.topup-btn {
+  padding: 9px 20px;
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.25);
+  border-radius: var(--r2);
+  color: var(--accent);
+  font-size: 13px; font-weight: 600;
+  transition: all 0.2s;
+}
+.topup-btn:hover { background: rgba(0,229,255,0.18); }
+
+.menu-group { margin-bottom: 16px; }
+.menu-group-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+.menu-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.menu-item:hover { border-color: var(--text3); }
+.menu-item-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.menu-item-text { flex: 1; font-size: 14px; font-weight: 500; }
+.menu-item-arrow { color: var(--text3); font-size: 16px; }
+.menu-logout {
+  width: 100%; padding: 12px;
+  background: rgba(255,61,87,0.08);
+  border: 1px solid rgba(255,61,87,0.2);
+  border-radius: var(--r);
+  color: var(--red);
+  font-size: 14px; font-weight: 600;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+.menu-logout:hover { background: rgba(255,61,87,0.14); }
+
+/* ── MODALS ──────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-sheet {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 20px 32px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--text3);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 13px; font-weight: 500;
+  z-index: 300;
+  opacity: 0;
+  transition: all 0.3s;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.success { border-color: rgba(0,200,83,0.3); color: var(--green); }
+.toast.error   { border-color: rgba(255,61,87,0.3); color: var(--red); }
+
+/* ── UTILS ───────────────────────────────────────────────── */
+.divider {
+  height: 1px; background: var(--border);
+  margin: 16px 0;
+}
+.text-accent { color: var(--accent); }
+.text-green  { color: var(--green); }
+.text-red    { color: var(--red); }
+.text-muted  { color: var(--text2); }
+.fw-mono     { font-family: var(--mono); }
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.flex-between {
+  display: flex; justify-content: space-between; align-items: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     AUTH SCREEN
+════════════════════════════════════════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="icon">🔑</div>
+      <div class="brand">Key<span>Shop</span></div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Đăng nhập</button>
+      <button class="auth-tab" onclick="switchTab('register')">Đăng ký</button>
+    </div>
+
+    <div class="auth-form">
+      <!-- Login -->
+      <div id="panel-login" class="auth-panel active">
+        <div class="form-group">
+          <label class="form-label">Tên đăng nhập</label>
+          <input type="text" id="login-user" class="form-input" placeholder="username của bạn">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <input type="password" id="login-pass" class="form-input" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Đăng nhập</button>
+      </div>
+
+      <!-- Register -->
+      <div id="panel-register" class="auth-panel">
+        <div class="form-group">
+          <label class="form-label">Tên đăng nhập</label>
+          <input type="text" id="reg-user" class="form-input" placeholder="chọn username">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="email@gmail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <input type="password" id="reg-pass" class="form-input" placeholder="tối thiểu 6 ký tự">
+        </div>
+        <button class="btn-primary" onclick="doRegister()">Tạo tài khoản</button>
+      </div>
+    </div>
+
+    <div class="auth-footer">Bằng việc đăng ký, bạn đồng ý với điều khoản dịch vụ</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     APP SCREEN
+════════════════════════════════════════════════════════ -->
+<div id="app-screen">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-logo">Key<span class="dot">Shop</span></div>
+    <div class="topbar-balance" id="topbar-balance">💰 0đ</div>
+    <div class="topbar-avatar" id="topbar-avatar">U</div>
+  </div>
+
+  <!-- Pages -->
+  <div class="pages">
+
+    <!-- ── HOME ──────────────────────────────────────────── -->
+    <div class="page active" id="page-home">
+      <div class="hero-banner">
+        <div class="hero-tag">KEYSHOP — PLATFORM</div>
+        <div class="hero-title">Key chính hãng,<br>giá tốt nhất 🔥</div>
+        <div class="hero-sub">Mua key tức thì, nhận ngay không chờ đợi</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val">1,248</div>
+          <div class="stat-label">Key đã bán</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">99.9%</div>
+          <div class="stat-label">Tỷ lệ thành công</div>
+        </div>
+      </div>
+
+      <div class="section-title">Sản phẩm <span>nổi bật</span></div>
+
+      <div class="product-grid">
+        <div class="product-card" onclick="goPage('buy')">
+          <div class="product-img">🎮</div>
+          <div class="product-body">
+            <div class="badge badge-hot">HOT</div>
+            <div class="product-name">FF Max Key</div>
+            <div class="product-price">15,000<span class="unit">đ/30 ngày</span></div>
+          </div>
+        </div>
+        <div class="product-card" onclick="goPage('buy')">
+          <div class="product-img">⚡</div>
+          <div class="product-body">
+            <div class="badge badge-new">MỚI</div>
+            <div class="product-name">Pro Key 7 ngày</div>
+            <div class="product-price">5,000<span class="unit">đ/7 ngày</span></div>
+          </div>
+        </div>
+        <div class="product-card" onclick="goPage('buy')">
+          <div class="product-img">👑</div>
+          <div class="product-body">
+            <div class="badge badge-sale">-30%</div>
+            <div class="product-name">VIP Key 1 ngày</div>
+            <div class="product-price">2,000<span class="unit">đ/ngày</span></div>
+          </div>
+        </div>
+        <div class="product-card" onclick="goPage('buy')">
+          <div class="product-img">💎</div>
+          <div class="product-body">
+            <div class="badge badge-hot">TOP</div>
+            <div class="product-name">Diamond Key</div>
+            <div class="product-price">50,000<span class="unit">đ/3 tháng</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BUY ───────────────────────────────────────────── -->
+    <div class="page" id="page-buy">
+      <div class="section-title">Mua <span>Key</span></div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="flex-between" style="margin-bottom:10px">
+          <span style="font-weight:600">Chọn gói</span>
+          <span class="text-muted" style="font-size:12px">Nhận key ngay</span>
+        </div>
+        <div class="price-list" id="price-list">
+          <div class="price-item selected" onclick="selectPlan(this, 2000, '1 ngày')">
+            <div class="price-item-icon">⚡</div>
+            <div class="price-item-info">
+              <div class="price-item-name">Key 1 ngày</div>
+              <div class="price-item-desc">Dùng thử, không giới hạn tính năng</div>
+            </div>
+            <div class="price-item-price">2.000đ</div>
+            <div class="price-item-radio"></div>
+          </div>
+          <div class="price-item" onclick="selectPlan(this, 5000, '7 ngày')">
+            <div class="price-item-icon">🔑</div>
+            <div class="price-item-info">
+              <div class="price-item-name">Key 7 ngày</div>
+              <div class="price-item-desc">Phổ biến nhất — tiết kiệm 30%</div>
+            </div>
+            <div class="price-item-price">5.000đ</div>
+            <div class="price-item-radio"></div>
+          </div>
+          <div class="price-item" onclick="selectPlan(this, 15000, '30 ngày')">
+            <div class="price-item-icon">👑</div>
+            <div class="price-item-info">
+              <div class="price-item-name">Key 30 ngày</div>
+              <div class="price-item-desc">Giá trị nhất — tiết kiệm 50%</div>
+            </div>
+            <div class="price-item-price">15.000đ</div>
+            <div class="price-item-radio"></div>
+          </div>
+          <div class="price-item" onclick="selectPlan(this, 50000, '3 tháng')">
+            <div class="price-item-icon">💎</div>
+            <div class="price-item-info">
+              <div class="price-item-name">Key 3 tháng</div>
+              <div class="price-item-desc">Diamond — ưu tiên hỗ trợ 24/7</div>
+            </div>
+            <div class="price-item-price">50.000đ</div>
+            <div class="price-item-radio"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="balance-info">
+        <span class="label">Số dư tài khoản</span>
+        <span class="val" id="buy-balance">0đ</span>
+      </div>
+
+      <button class="btn-buy" onclick="doBuy()">🔑 Mua ngay</button>
+    </div>
+
+    <!-- ── HISTORY ────────────────────────────────────────── -->
+    <div class="page" id="page-history">
+      <div class="section-title">Lịch sử <span>giao dịch</span></div>
+
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterHistory(this,'all')">Tất cả</button>
+        <button class="filter-btn" onclick="filterHistory(this,'buy')">Mua key</button>
+        <button class="filter-btn" onclick="filterHistory(this,'topup')">Nạp tiền</button>
+      </div>
+
+      <div id="history-list"></div>
+    </div>
+
+    <!-- ── DOWNLOAD ───────────────────────────────────────── -->
+    <div class="page" id="page-download">
+      <div class="section-title">Tải <span>ứng dụng</span></div>
+
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="picon">🍎</div>
+          <div class="pname">iOS</div>
+          <div class="pver">v2.4.1 • iPhone/iPad</div>
+          <button class="btn-dl" onclick="showDlModal('ios')">Tải iOS</button>
+        </div>
+        <div class="platform-card">
+          <div class="picon">🤖</div>
+          <div class="pname">Android</div>
+          <div class="pver">v2.4.1 • APK</div>
+          <button class="btn-dl" onclick="showDlModal('android')">Tải APK</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">
+          📋 Hướng dẫn cài iOS (không cần jailbreak)
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8">
+          1. Tải file <span class="fw-mono text-accent">.ipa</span> về máy tính<br>
+          2. Mở <strong>AltStore</strong> hoặc <strong>TrollStore</strong><br>
+          3. Chọn "Install" → chọn file .ipa<br>
+          4. Đợi cài đặt → mở app → nhập key
+        </div>
+      </div>
+
+      <div class="proxy-section">
+        <div class="section-title" style="font-size:15px">Proxy <span>server</span></div>
+        <div class="card" style="margin-bottom:10px;padding:12px 14px">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">
+            Dùng proxy để bypass block hoặc giảm ping
+          </div>
+          <div class="proxy-item" style="border-radius:var(--r2);margin-bottom:6px">
+            <span class="proxy-flag">🇻🇳</span>
+            <div>
+              <div class="proxy-host">proxy-vn.keyshop.io:8080</div>
+              <div style="font-size:10px;color:var(--text3)">Vietnam • HTTP/HTTPS</div>
+            </div>
+            <span class="proxy-ping fast">12ms</span>
+          </div>
+          <div class="proxy-item" style="border-radius:var(--r2);margin-bottom:6px">
+            <span class="proxy-flag">🇸🇬</span>
+            <div>
+              <div class="proxy-host">proxy-sg.keyshop.io:8080</div>
+              <div style="font-size:10px;color:var(--text3)">Singapore • HTTP/HTTPS</div>
+            </div>
+            <span class="proxy-ping fast">28ms</span>
+          </div>
+          <div class="proxy-item" style="border-radius:var(--r2)">
+            <span class="proxy-flag">🇯🇵</span>
+            <div>
+              <div class="proxy-host">proxy-jp.keyshop.io:8080</div>
+              <div style="font-size:10px;color:var(--text3)">Japan • HTTP/HTTPS</div>
+            </div>
+            <span class="proxy-ping mid">65ms</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px 14px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">
+            📱 Cài proxy iOS / Android
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.9">
+            <strong style="color:var(--text)">iOS:</strong> Settings → Wi-Fi → ⓘ → Configure Proxy → Manual<br>
+            <span class="fw-mono text-accent">Server: proxy-vn.keyshop.io  Port: 8080</span><br><br>
+            <strong style="color:var(--text)">Android:</strong> Settings → Wi-Fi → Hold network → Modify → Advanced → Proxy<br>
+            <span class="fw-mono text-accent">Host: proxy-vn.keyshop.io  Port: 8080</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MENU ───────────────────────────────────────────── -->
+    <div class="page" id="page-menu">
+      <div class="user-header">
+        <div class="user-avatar" id="menu-avatar">U</div>
+        <div>
+          <div class="user-name" id="menu-username">Username</div>
+          <div class="user-role">Member</div>
+        </div>
+      </div>
+
+      <div class="balance-card">
+        <div class="balance-label">Số dư tài khoản</div>
+        <div class="balance-amount" id="menu-balance">0đ</div>
+        <button class="topup-btn" onclick="showTopup()">+ Nạp tiền</button>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-group-title">TÀI KHOẢN</div>
+        <div class="menu-item" onclick="showToast('Đang phát triển...','')">
+          <div class="menu-item-icon" style="background:rgba(0,229,255,0.1)">👤</div>
+          <div class="menu-item-text">Thông tin cá nhân</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="showToast('Đang phát triển...','')">
+          <div class="menu-item-icon" style="background:rgba(0,153,255,0.1)">🔐</div>
+          <div class="menu-item-text">Đổi mật khẩu</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="goPage('history')">
+          <div class="menu-item-icon" style="background:rgba(255,179,0,0.1)">📋</div>
+          <div class="menu-item-text">Lịch sử giao dịch</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-group-title">HỖ TRỢ</div>
+        <div class="menu-item" onclick="showToast('Đang kết nối admin...','')">
+          <div class="menu-item-icon" style="background:rgba(0,200,83,0.1)">💬</div>
+          <div class="menu-item-text">Chat hỗ trợ</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="showToast('Đang phát triển...','')">
+          <div class="menu-item-icon" style="background:rgba(255,61,87,0.1)">📣</div>
+          <div class="menu-item-text">Thông báo</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="showToast('Đang phát triển...','')">
+          <div class="menu-item-icon" style="background:rgba(150,100,255,0.1)">⭐</div>
+          <div class="menu-item-text">Đánh giá app</div>
+          <div class="menu-item-arrow">›</div>
+        </div>
+      </div>
+
+      <button class="menu-logout" onclick="doLogout()">Đăng xuất</button>
+    </div>
+
+  </div><!-- /pages -->
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="goPage('home')" id="nav-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Trang chủ
+    </button>
+    <button class="nav-item" onclick="goPage('buy')" id="nav-buy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="16"/>
+        <line x1="8" y1="12" x2="16" y2="12"/>
+      </svg>
+      Mua Key
+    </button>
+    <button class="nav-item" onclick="goPage('history')" id="nav-history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <polyline points="12 20 12 10"/>
+        <polyline points="18 20 18 4"/>
+        <polyline points="6 20 6 16"/>
+      </svg>
+      Lịch sử
+    </button>
+    <button class="nav-item" onclick="goPage('download')" id="nav-download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Tải app
+    </button>
+    <button class="nav-item" onclick="goPage('menu')" id="nav-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      Menu
+    </button>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ── MODAL: NẠP TIỀN ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-topup" onclick="closeModal('modal-topup')">
+  <div class="modal-sheet" onclick="e=>e.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💰 Nạp tiền</div>
+    <div class="form-group">
+      <label class="form-label">Số tiền nạp (đ)</label>
+      <input type="number" id="topup-amount" class="form-input" placeholder="VD: 50000">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phương thức</label>
+      <select class="form-input" id="topup-method">
+        <option>MoMo</option>
+        <option>ZaloPay</option>
+        <option>Ngân hàng</option>
+        <option>Thẻ cào</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="doTopup()">Xác nhận nạp</button>
+  </div>
+</div>
+
+<!-- ── MODAL: DOWNLOAD ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-dl" onclick="closeModal('modal-dl')">
+  <div class="modal-sheet" onclick="e=>e.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="dl-title">Tải ứng dụng</div>
+    <div id="dl-content" style="font-size:13px;color:var(--text2);line-height:1.9"></div>
+    <button class="btn-primary" style="margin-top:16px" onclick="closeModal('modal-dl')">Đóng</button>
+  </div>
+</div>
+
+<!-- ── TOAST ──────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// STATE — dữ liệu giả lập (thay bằng API thật)
+// ════════════════════════════════════════════════════════════
+let state = {
+  user: null,
+  balance: 0,
+  history: [],
+  selectedPlan: { price: 2000, label: '1 ngày' }
+};
+
+// Dữ liệu user giả lập (thay bằng backend sau)
+const FAKE_USERS = {
+  'admin': { pass: '123456', balance: 150000 },
+  'test':  { pass: '123456', balance: 50000 }
+};
+
+// ════════════════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+  document.getElementById('panel-login').classList.toggle('active', tab==='login');
+  document.getElementById('panel-register').classList.toggle('active', tab==='register');
+}
+
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!user || !pass) { showToast('Nhập đầy đủ thông tin', 'error'); return; }
+
+  // Giả lập check — thay bằng API call
+  if (FAKE_USERS[user] && FAKE_USERS[user].pass === pass) {
+    loginSuccess(user, FAKE_USERS[user].balance);
+  } else {
+    showToast('Sai tên đăng nhập hoặc mật khẩu', 'error');
+  }
+}
+
+function doRegister() {
+  const user  = document.getElementById('reg-user').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  if (!user || !email || !pass) { showToast('Nhập đầy đủ thông tin', 'error'); return; }
+  if (pass.length < 6) { showToast('Mật khẩu tối thiểu 6 ký tự', 'error'); return; }
+  if (FAKE_USERS[user]) { showToast('Username đã tồn tại', 'error'); return; }
+  // Giả lập tạo tài khoản
+  FAKE_USERS[user] = { pass, balance: 0 };
+  showToast('Đăng ký thành công!', 'success');
+  setTimeout(() => switchTab('login'), 800);
+}
+
+function loginSuccess(username, balance) {
+  state.user    = username;
+  state.balance = balance;
+  // Giả lập lịch sử
+  state.history = [
+    { type:'topup', name:'Nạp tiền MoMo',    date:'01/11/2026 08:30', amount:+100000, key:null },
+    { type:'buy',   name:'Key 30 ngày',       date:'01/11/2026 09:00', amount:-15000,  key:'FF-'+randKey() },
+    { type:'topup', name:'Nạp tiền ZaloPay',  date:'31/10/2026 14:00', amount:+50000,  key:null },
+    { type:'buy',   name:'Key 7 ngày',        date:'30/10/2026 20:00', amount:-5000,   key:'FF-'+randKey() },
+    { type:'buy',   name:'Key 1 ngày',        date:'28/10/2026 10:00', amount:-2000,   key:'FF-'+randKey() },
+  ];
+  updateUI();
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-screen').classList.add('visible');
+  renderHistory(state.history);
+}
+
+function doLogout() {
+  state.user = null;
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-screen').classList.remove('visible');
+  goPage('home');
+}
+
+// ════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name)?.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════
+// BUY
+// ════════════════════════════════════════════════════════════
+function selectPlan(el, price, label) {
+  document.querySelectorAll('.price-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedPlan = { price, label };
+}
+
+function doBuy() {
+  if (!state.user) { showToast('Chưa đăng nhập', 'error'); return; }
+  const { price, label } = state.selectedPlan;
+  if (state.balance < price) {
+    showToast('Số dư không đủ — hãy nạp thêm', 'error');
+    return;
+  }
+  state.balance -= price;
+  const key = 'FF-' + randKey();
+  state.history.unshift({
+    type: 'buy',
+    name: 'Key ' + label,
+    date: fmtDate(new Date()),
+    amount: -price,
+    key
+  });
+  updateUI();
+  renderHistory(state.history);
+  showToast('Mua thành công! Key: ' + key, 'success');
+}
+
+// ════════════════════════════════════════════════════════════
+// HISTORY
+// ════════════════════════════════════════════════════════════
+let histFilter = 'all';
+
+function renderHistory(list) {
+  const filtered = histFilter === 'all' ? list
+    : list.filter(h => h.type === histFilter);
+  const el = document.getElementById('history-list');
+  if (!filtered.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Chưa có giao dịch nào</div>';
+    return;
+  }
+  el.innerHTML = filtered.map(h => `
+    <div class="history-item">
+      <div class="history-icon ${h.type}">
+        ${h.type === 'buy' ? '🔑' : '💰'}
+      </div>
+      <div class="history-info">
+        <div class="history-name">${h.name}</div>
+        <div class="history-date">${h.date}</div>
+        ${h.key ? `<div class="history-key">${h.key}</div>` : ''}
+      </div>
+      <div class="history-amount ${h.amount < 0 ? 'minus' : 'plus'}">
+        ${h.amount < 0 ? '-' : '+'}${Math.abs(h.amount).toLocaleString()}đ
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterHistory(btn, type) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  histFilter = type;
+  renderHistory(state.history);
+}
+
+// ════════════════════════════════════════════════════════════
+// TOPUP
+// ════════════════════════════════════════════════════════════
+function showTopup() {
+  document.getElementById('modal-topup').classList.add('open');
+}
+
+function doTopup() {
+  const amount = parseInt(document.getElementById('topup-amount').value);
+  const method = document.getElementById('topup-method').value;
+  if (!amount || amount < 1000) { showToast('Số tiền tối thiểu 1.000đ', 'error'); return; }
+  state.balance += amount;
+  state.history.unshift({
+    type: 'topup',
+    name: 'Nạp tiền ' + method,
+    date: fmtDate(new Date()),
+    amount: +amount,
+    key: null
+  });
+  updateUI();
+  renderHistory(state.history);
+  closeModal('modal-topup');
+  showToast('Nạp thành công +' + amount.toLocaleString() + 'đ', 'success');
+  document.getElementById('topup-amount').value = '';
+}
+
+// ════════════════════════════════════════════════════════════
+// DOWNLOAD
+// ════════════════════════════════════════════════════════════
+function showDlModal(platform) {
+  const modal   = document.getElementById('modal-dl');
+  const title   = document.getElementById('dl-title');
+  const content = document.getElementById('dl-content');
+  if (platform === 'ios') {
+    title.textContent = '🍎 Tải iOS';
+    content.innerHTML = `
+      <b style="color:var(--text)">Yêu cầu:</b> iOS 14+ | iPhone 7 trở lên<br><br>
+      <b style="color:var(--text)">Bước 1:</b> Cài AltStore hoặc TrollStore trên máy tính<br>
+      <b style="color:var(--text)">Bước 2:</b> Tải file .ipa từ link bên dưới<br>
+      <b style="color:var(--text)">Bước 3:</b> Cài qua AltStore → Install → chọn file .ipa<br><br>
+      <div style="background:var(--card2);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;color:var(--accent)">
+        keyshop.io/download/KeyShop-v2.4.1.ipa
+      </div>
+    `;
+  } else {
+    title.textContent = '🤖 Tải Android';
+    content.innerHTML = `
+      <b style="color:var(--text)">Yêu cầu:</b> Android 8.0+ | ARM64<br><br>
+      <b style="color:var(--text)">Bước 1:</b> Tải APK từ link bên dưới<br>
+      <b style="color:var(--text)">Bước 2:</b> Settings → Cho phép cài từ nguồn không rõ<br>
+      <b style="color:var(--text)">Bước 3:</b> Mở file APK → Cài đặt → Mở app<br><br>
+      <div style="background:var(--card2);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;color:var(--accent)">
+        keyshop.io/download/KeyShop-v2.4.1.apk
+      </div>
+    `;
+  }
+  modal.classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════════
+// UI UPDATES
+// ════════════════════════════════════════════════════════════
+function updateUI() {
+  const bal = state.balance.toLocaleString() + 'đ';
+  document.getElementById('topbar-balance').innerHTML = '💰 ' + bal;
+  document.getElementById('topbar-avatar').textContent = state.user?.[0]?.toUpperCase() || 'U';
+  document.getElementById('buy-balance').textContent   = bal;
+  document.getElementById('menu-balance').textContent  = bal;
+  document.getElementById('menu-username').textContent = state.user || '';
+  document.getElementById('menu-avatar').textContent   = state.user?.[0]?.toUpperCase() || 'U';
+}
+
+// ════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast' + (type ? ' '+type : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function randKey() {
+  return Math.random().toString(36).substr(2,4).toUpperCase() +
+         '-' + Math.random().toString(36).substr(2,4).toUpperCase() +
+         '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+
+function fmtDate(d) {
+  return d.toLocaleDateString('vi-VN', {
+    day:'2-digit', month:'2-digit', year:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+}
+</script>
+</body>
+</html>
